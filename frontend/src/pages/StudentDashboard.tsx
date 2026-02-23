@@ -9,7 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AssessmentType, Semester } from '@/types/attendance';
 import { semesters, departments } from '@/data/mockData';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { LogOut, CheckCircle2, XCircle, History, Calendar as CalendarIcon, MessageSquare, ExternalLink, ChevronRight, TrendingUp, ShieldCheck, AlertTriangle, Plus, User, ArrowUpRight, Clock, Download, FileText, Bell, Layout, GraduationCap, ArrowLeft, Settings, Smartphone } from 'lucide-react';
+import {
+    LogOut, CheckCircle2, XCircle, History, Calendar as CalendarIcon,
+    MessageSquare, ExternalLink, ChevronRight, TrendingUp, ShieldCheck,
+    AlertTriangle, Plus, User, ArrowUpRight, Clock, Download, FileText,
+    Bell, Layout, GraduationCap, ArrowLeft, Settings, Phone
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { NotificationBell } from '@/components/NotificationBell';
@@ -348,7 +353,7 @@ export default function StudentDashboard() {
                         <div className="flex items-center justify-between relative z-10">
                             <div className="flex items-center gap-4">
                                 <div className="h-12 w-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                                    <Smartphone className="h-6 w-6 text-white" />
+                                    <Phone className="h-6 w-6 text-white" />
                                 </div>
                                 <div>
                                     <h3 className="font-black text-sm uppercase tracking-tight">Notification Settings</h3>
