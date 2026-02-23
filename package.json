@@ -1,6 +1,6 @@
 {
     "name": "class-connect-root",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Root script to run both backend and frontend",
     "scripts": {
         "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
