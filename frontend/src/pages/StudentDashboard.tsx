@@ -72,19 +72,23 @@ export default function StudentDashboard() {
                 try {
                     // Fetch Leaves
                     if (student.id !== 'unknown') {
+                        console.log(`[DASHBOARD] Fetching leaves for student: ${student.id}`);
                         const leaves = await dataService.getStudentLeaves(student.id);
                         setLeaveRequests(Array.isArray(leaves) ? leaves : []);
                     }
 
+                    console.log(`[DASHBOARD] Fetching attendance and marks for student: ${student.id}`);
                     const [attendanceRes, marksRes] = await Promise.all([
                         api.get(`/attendance/student/${student.id}`),
                         api.get(`/marks/student/${student.id}`)
                     ]);
 
+                    console.log('[DASHBOARD] Attendance Response:', attendanceRes.data);
                     if (attendanceRes.data.success) {
                         setAllSubjectAttendance(attendanceRes.data.subjectStats || []);
                     }
 
+                    console.log('[DASHBOARD] Marks Response:', marksRes.data);
                     if (marksRes.data.success) {
                         setPerformance({
                             averageMarks: marksRes.data.averageMarks || 0,
@@ -92,11 +96,10 @@ export default function StudentDashboard() {
                         });
                     }
 
-
-
-                } catch (error) {
+                } catch (error: any) {
                     console.error('Error fetching student dashboard data:', error);
-                    toast.error("Some data could not be loaded. Please try again later.");
+                    const errMsg = error.response?.data?.message || error.message || "Failed to load dashboard data.";
+                    toast.error(errMsg);
                 }
             } else {
                 navigate('/login');

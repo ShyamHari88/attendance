@@ -2,6 +2,7 @@ import Marks from '../models/Marks.js';
 import Notification from '../models/Notification.js';
 import User from '../models/User.js';
 import { sendPushNotification } from '../services/pushService.js';
+import crypto from 'crypto';
 
 
 // Get marks for a student
@@ -89,13 +90,11 @@ export const addMarks = async (req, res) => {
                 }
             }
 
-
             if (notifications.length > 0) {
                 await Notification.insertMany(notifications);
             }
-        } catch (notifError) {
-            console.error('Error creating notifications for marks:', notifError);
-            // Don't fail the request if notifications fail
+        } catch (notificationError) {
+            console.error('Failed to create notifications for marks:', notificationError);
         }
 
         res.status(201).json({

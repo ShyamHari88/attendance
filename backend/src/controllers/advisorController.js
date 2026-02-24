@@ -3,6 +3,7 @@ import Student from '../models/Student.js';
 import AttendanceRecord from '../models/AttendanceRecord.js';
 import Marks from '../models/Marks.js';
 import LeaveRequest from '../models/LeaveRequest.js';
+import { sendPushNotification } from '../services/pushService.js';
 import crypto from 'crypto';
 
 // ... (keep createAdvisor as is - I will overwrite the file content to be safe and clean or just append) ...
@@ -354,6 +355,12 @@ export const handleLeaveRequest = async (req, res) => {
                 message: `Your ${request.type} request from ${new Date(request.fromDate).toLocaleDateString()} to ${new Date(request.toDate).toLocaleDateString()} has been ${status} by your Class Advisor.`,
                 type: 'leave_update'
             });
+
+            // Trigger Push Notification
+            sendPushNotification(request.studentId, `Leave Request ${status.charAt(0).toUpperCase() + status.slice(1)}`, `Your ${request.type} request from ${new Date(request.fromDate).toLocaleDateString()} has been ${status} by your Class Advisor.`, {
+                url: '/student-dashboard',
+                type: 'leave_update'
+            }).catch(err => console.error('Push fail (leave):', err));
         } catch (noteError) {
             console.error('Error sending student notification:', noteError);
         }
