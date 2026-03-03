@@ -160,7 +160,8 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`\n🚀 Server running on port ${PORT}`);
     console.log(`📍 Health check: http://localhost:${PORT}/health`);
-    console.log(`📍 API endpoint: http://localhost:${PORT}/api\n`);
+    console.log(`📍 API endpoint: http://localhost:${PORT}/api`);
+    console.log(`🚀 Vercel Deployment Verified: ${new Date().toISOString()}\n`);
 });
 
 
