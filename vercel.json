@@ -6,12 +6,11 @@
             "destination": "/backend/src/server.js"
         },
         {
-            "source": "/(.*)",
-            "destination": "/frontend/dist/$1",
-            "check": true
+            "source": "/((?!api/).*\\.[a-z0-9]+)$",
+            "destination": "/frontend/dist/$1"
         },
         {
-            "source": "/(.*)",
+            "source": "/((?!api/).*)",
             "destination": "/frontend/dist/index.html"
         }
     ],
