@@ -139,12 +139,8 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
     console.error(err.stack);
 
-    // Log globally to file using synchronous fs
-    try {
-        fs.appendFileSync('server-error.log', `${new Date().toISOString()} - ${err.message}\n${err.stack}\n\n`);
-    } catch (e) {
-        console.error('Failed to write to log file', e);
-    }
+    // Log globally to console instead of file
+    console.error(`${new Date().toISOString()} - ${err.message}\n${err.stack}`);
 
     res.status(500).json({
         message: 'Something went wrong!',
