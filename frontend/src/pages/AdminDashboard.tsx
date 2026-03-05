@@ -207,6 +207,17 @@ export default function AdminDashboard() {
         navigate('/login');
     };
 
+    const handleDeleteAdvisor = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this advisor? This action cannot be undone.')) return;
+        try {
+            await dataService.deleteAdvisor(id);
+            toast.success('Advisor deleted');
+            loadData(); // Refresh
+        } catch (error) {
+            toast.error('Failed to delete advisor');
+        }
+    };
+
     const handleDeleteUser = async (type: 'student' | 'teacher', id: string) => {
         if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
 
@@ -1169,6 +1180,7 @@ export default function AdminDashboard() {
                                                     <TableHead>Email</TableHead>
                                                     <TableHead>Department</TableHead>
                                                     <TableHead>Section</TableHead>
+                                                    <TableHead className="text-right">Actions</TableHead>
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
@@ -1179,6 +1191,16 @@ export default function AdminDashboard() {
                                                         <TableCell>{advisor.email}</TableCell>
                                                         <TableCell>{advisor.departmentId}</TableCell>
                                                         <TableCell>{advisor.section}</TableCell>
+                                                        <TableCell className="text-right">
+                                                            <Button
+                                                                size="sm"
+                                                                variant="ghost"
+                                                                className="text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                                                                onClick={() => handleDeleteAdvisor(advisor.userId || advisor._id)}
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </TableCell>
                                                     </TableRow>
                                                 ))}
                                                 {advisors?.length === 0 && (

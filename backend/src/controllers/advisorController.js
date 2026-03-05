@@ -434,3 +434,16 @@ export const getTodaysAttendance = async (req, res) => {
         res.status(500).json({ message: 'Error fetching attendance stats' });
     }
 };
+
+// Delete advisor
+export const deleteAdvisor = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const advisor = await User.findOneAndDelete({ role: 'advisor', userId: id });
+        if (!advisor) return res.status(404).json({ message: 'Advisor not found' });
+        res.json({ success: true, message: 'Advisor deleted successfully' });
+    } catch (error) {
+        console.error('Delete advisor error:', error);
+        res.status(500).json({ message: 'Error deleting advisor', error: error.message });
+    }
+};

@@ -9,7 +9,8 @@ import {
     updateStudentGrades,
     getActionableLeaveRequests,
     handleLeaveRequest,
-    getTodaysAttendance
+    getTodaysAttendance,
+    deleteAdvisor
 } from '../controllers/advisorController.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 
@@ -18,6 +19,7 @@ const router = express.Router();
 // Admin routes
 router.post('/create', authenticate, authorize('admin'), createAdvisor);
 router.get('/all', authenticate, authorize('admin'), getAllAdvisors);
+router.delete('/:id', authenticate, authorize('admin'), deleteAdvisor);
 
 // Advisor routes
 router.get('/pending-students', authenticate, authorize('advisor'), getPendingStudents);

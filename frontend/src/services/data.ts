@@ -113,6 +113,16 @@ export const dataService = {
         }
     },
 
+    deleteAdvisor: async (advisorId: string) => {
+        try {
+            const { default: api } = await import('./api');
+            await api.delete(`/advisor/${advisorId}`);
+        } catch (error) {
+            console.error('Error deleting advisor:', error);
+            throw error;
+        }
+    },
+
     addAdvisor: async (data: any) => {
         try {
             const { default: api } = await import('./api');
