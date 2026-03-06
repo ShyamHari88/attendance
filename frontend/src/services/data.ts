@@ -8,48 +8,73 @@ const MARKS_KEY = 'attendease_marks';
 const USER_PROFILE_KEY = 'attendease_user_profile';
 const SUBJECTS_KEY = 'attendease_subjects';
 
+// Safe UUID generator fallback for older browsers/devices
+const safeUUID = () => {
+    try {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    } catch (e) {
+        return Math.random().toString(36).substring(2, 15);
+    }
+};
+
+// Safe localStorage access
+const safeGetItem = (key: string): string | null => {
+    try {
+        return localStorage.getItem(key);
+    } catch (e) {
+        return null;
+    }
+};
+
+const safeSetItem = (key: string, value: string) => {
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {
+        console.warn('Failed to save to localStorage:', key);
+    }
+};
+
 // Initialize data if not present
 const initializeData = () => {
-    if (!localStorage.getItem(STUDENTS_KEY)) {
-        // Initialize with sample student so login works for testing
-        const sampleStudent: Student = {
-            id: 'sample-student-1',
-            name: 'Tamil',
-            rollNumber: '23IT151',
-            email: 'tamil@college.edu',
-            departmentId: '1', // IT
-            year: 1,
-            section: 'C',
-            currentSemester: 1
-        };
-        localStorage.setItem(STUDENTS_KEY, JSON.stringify([sampleStudent]));
-    }
+    try {
+        if (!safeGetItem(STUDENTS_KEY)) {
+            // Initialize with sample student
+            const sampleStudent: Student = {
+                id: 'sample-student-1',
+                name: 'Tamil',
+                rollNumber: '23IT151',
+                email: 'tamil@college.edu',
+                departmentId: '1',
+                year: 1,
+                section: 'C',
+                currentSemester: 1
+            };
+            safeSetItem(STUDENTS_KEY, JSON.stringify([sampleStudent]));
+        }
 
-    if (!localStorage.getItem(RECORDS_KEY)) {
-        localStorage.setItem(RECORDS_KEY, JSON.stringify([]));
-    }
+        if (!safeGetItem(RECORDS_KEY)) safeSetItem(RECORDS_KEY, JSON.stringify([]));
+        if (!safeGetItem(SESSIONS_KEY)) safeSetItem(SESSIONS_KEY, JSON.stringify([]));
+        if (!safeGetItem(MARKS_KEY)) safeSetItem(MARKS_KEY, JSON.stringify([]));
+        if (!safeGetItem(SUBJECTS_KEY)) safeSetItem(SUBJECTS_KEY, JSON.stringify([]));
 
-    if (!localStorage.getItem(SESSIONS_KEY)) {
-        localStorage.setItem(SESSIONS_KEY, JSON.stringify([]));
-    }
-
-    if (!localStorage.getItem(MARKS_KEY)) {
-        localStorage.setItem(MARKS_KEY, JSON.stringify([]));
-    }
-
-    if (!localStorage.getItem(SUBJECTS_KEY)) {
-        localStorage.setItem(SUBJECTS_KEY, JSON.stringify([]));
-    }
-
-    if (!localStorage.getItem(USER_PROFILE_KEY)) {
-        const defaultProfile: UserProfile = {
-            id: 'teacher-1',
-            name: 'John Doe',
-            email: 'john.doe@college.edu',
-            department: 'Information Technology',
-            role: 'Faculty'
-        };
-        localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(defaultProfile));
+        if (!safeGetItem(USER_PROFILE_KEY)) {
+            const defaultProfile: UserProfile = {
+                id: 'teacher-1',
+                name: 'John Doe',
+                email: 'john.doe@college.edu',
+                department: 'Information Technology',
+                role: 'Faculty'
+            };
+            safeSetItem(USER_PROFILE_KEY, JSON.stringify(defaultProfile));
+        }
+    } catch (e) {
+        console.error('Initialization error:', e);
     }
 };
 
@@ -445,7 +470,7 @@ export const dataService = {
                 parseInt(r.period.replace(/\D/g, '')) : r.period;
 
             return {
-                recordId: `att-${crypto.randomUUID()}`,
+                recordId: `att-${safeUUID()}`,
                 studentId: r.studentId,
                 rollNumber: student?.rollNumber || '',
                 subjectId: r.subject,
@@ -528,7 +553,7 @@ export const dataService = {
                 parseInt(r.period.replace(/\D/g, '')) : r.period;
 
             return {
-                recordId: `att-${crypto.randomUUID()}`,
+                recordId: `att-${safeUUID()}`,
                 studentId: r.studentId,
                 rollNumber: student?.rollNumber || '',
                 subjectId: r.subject,
@@ -720,7 +745,7 @@ export const dataService = {
         const mongoMarks = marks.map(m => {
             const student = students.find(s => s.id === m.studentId);
             return {
-                markId: `mark-${crypto.randomUUID()}`,
+                markId: `mark-${safeUUID()}`,
                 studentId: m.studentId,
                 rollNumber: student?.rollNumber || '',
                 subjectId: m.subject,

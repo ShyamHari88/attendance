@@ -251,19 +251,31 @@ export const authService = {
 
     // Logout
     logout: () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem(STORAGE_KEY);
+        try {
+            localStorage.removeItem('token');
+            localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {
+            // Ignore
+        }
         window.location.href = '/login';
     },
 
     // Get Current User
     getCurrentUser: (): User | null => {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : null;
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : null;
+        } catch (e) {
+            return null;
+        }
     },
 
     // Check if authenticated
     isAuthenticated: (): boolean => {
-        return !!localStorage.getItem('token');
+        try {
+            return !!localStorage.getItem('token');
+        } catch (e) {
+            return false;
+        }
     }
 };

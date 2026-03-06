@@ -23,7 +23,12 @@ export function PWAInstallPrompt() {
         const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
         setIsIOS(ios);
 
-        const dismissed = localStorage.getItem('pwa-install-dismissed');
+        let dismissed = null;
+        try {
+            dismissed = localStorage.getItem('pwa-install-dismissed');
+        } catch (e) {
+            console.warn('LocalStorage not available for PWA prompt');
+        }
         if (dismissed) return;
 
         if (ios) {
@@ -55,7 +60,11 @@ export function PWAInstallPrompt() {
 
     const handleDismiss = () => {
         setShowBanner(false);
-        localStorage.setItem('pwa-install-dismissed', '1');
+        try {
+            localStorage.setItem('pwa-install-dismissed', '1');
+        } catch (e) {
+            // Ignore
+        }
     };
 
     if (isInstalled || !showBanner) return null;
