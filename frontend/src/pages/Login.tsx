@@ -54,7 +54,12 @@ export default function Login() {
       }
     } catch (error: any) {
       console.error(`[LOGIN ERROR] ${currentTab} login failed:`, error);
-      const msg = error.message || 'Login failed. Please check your credentials.';
+
+      const serverData = error.response?.data;
+      const msg = serverData?.error
+        ? `${serverData.message}: ${serverData.error}`
+        : (serverData?.message || error.message || 'Login failed. Please check your credentials.');
+
       setErrorMsg(msg);
       toast.error(msg);
     } finally {

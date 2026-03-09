@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import User from '../models/User.js';
 import Student from '../models/Student.js';
+import mongoose from 'mongoose';
 import { sendPasswordResetEmail, sendWelcomeEmail } from '../services/emailService.js';
 
 // Generate JWT Token
@@ -56,7 +57,6 @@ export const studentSignup = async (req, res) => {
             departmentId,
             year: parseInt(year),
             section,
-            section,
             currentSemester: currentSemester || 1,
             isApproved: false // Explicitly set to false for new students
         });
@@ -70,11 +70,9 @@ export const studentSignup = async (req, res) => {
             studentId,
             name,
             email: req.body.email,
-
             rollNumber,
             departmentId,
             year: parseInt(year),
-            section,
             section,
             currentSemester: currentSemester || 1,
             isApproved: false
@@ -126,6 +124,13 @@ export const studentLogin = async (req, res) => {
 
         if (!rollNumber || !password) {
             return res.status(400).json({ message: 'Please provide roll number and password' });
+        }
+
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                message: 'Database connection is not ready',
+                error: 'The server cannot reach MongoDB. Please check the MONGODB_URI on Railway.'
+            });
         }
 
         // Find user by roll number
@@ -260,6 +265,13 @@ export const teacherLogin = async (req, res) => {
             return res.status(400).json({ message: 'Please provide teacher ID and password' });
         }
 
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                message: 'Database connection is not ready',
+                error: 'The server cannot reach MongoDB. Please check the MONGODB_URI on Railway.'
+            });
+        }
+
         // Find user by teacher ID
         const user = await User.findOne({ teacherId, role: 'teacher' });
         if (!user) {
@@ -312,6 +324,13 @@ export const adminLogin = async (req, res) => {
 
         if (!email || !password) {
             return res.status(400).json({ message: 'Please provide email and password' });
+        }
+
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                message: 'Database connection is not ready',
+                error: 'The server cannot reach MongoDB. Please check the MONGODB_URI on Railway.'
+            });
         }
 
         // Find user by email and admin role
@@ -498,6 +517,13 @@ export const advisorLogin = async (req, res) => {
 
         if (!advisorId || !password) {
             return res.status(400).json({ message: 'Please provide advisor ID and password' });
+        }
+
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({
+                message: 'Database connection is not ready',
+                error: 'The server cannot reach MongoDB. Please check the MONGODB_URI on Railway.'
+            });
         }
 
         // Find user by advisor ID
