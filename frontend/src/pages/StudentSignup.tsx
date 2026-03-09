@@ -3,8 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { authService } from '@/services/auth';
 import { departments, years, sections } from '@/data/mockData';
-import { GraduationCap, ArrowLeft } from 'lucide-react';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { GraduationCap, ArrowLeft, User, Mail, Hash, Lock, Building, Calendar, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function StudentSignup() {
     const navigate = useNavigate();
@@ -63,156 +66,228 @@ export default function StudentSignup() {
     };
 
     return (
-        <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light py-4">
-            <Container>
-                <Row className="justify-content-center">
-                    <Col md={8} lg={6} xl={5}>
-                        <Card className="shadow-lg border-0 rounded-lg">
-                            <Card.Header className="bg-white border-0 pt-4 px-4">
-                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <Link to="/login" className="btn btn-link text-decoration-none p-0 d-flex align-items-center text-muted">
-                                        <ArrowLeft className="me-2" size={16} />
-                                        Back to Login
-                                    </Link>
-                                </div>
-                                <div className="text-center mb-4">
-                                    <div className="d-flex justify-content-center mb-3">
-                                        <div className="bg-primary bg-opacity-10 p-3 rounded-circle">
-                                            <GraduationCap className="text-primary" size={48} />
-                                        </div>
-                                    </div>
-                                    <h2 className="text-center fw-bold text-dark">Student Sign Up</h2>
-                                    <p className="text-muted text-center">Create your student account</p>
-                                </div>
-                            </Card.Header>
-                            <Card.Body className="px-4 pb-4">
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Group className="mb-3" controlId="name">
-                                        <Form.Label>Full Name *</Form.Label>
-                                        <Form.Control
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-primary/10 px-4 py-8">
+            <div className="w-full max-w-xl animate-fade-in">
+                {/* Logo */}
+                <div className="mb-6 text-center">
+                    <Link to="/" className="inline-block transition-transform hover:scale-105 active:scale-95">
+                        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white p-2 shadow-sm">
+                            <img
+                                src="/easy-attendance-logo.png"
+                                alt="EasyAttendance Logo"
+                                className="h-full w-full object-contain"
+                            />
+                        </div>
+                    </Link>
+                </div>
+
+                <Card className="card-elevated">
+                    <CardHeader className="text-center relative pb-2">
+                        <Link to="/login" className="absolute left-6 top-6 text-muted-foreground hover:text-foreground transition-colors flex items-center text-sm">
+                            <ArrowLeft className="mr-1 h-4 w-4" />
+                            Back
+                        </Link>
+
+                        <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary shadow-sm mt-2">
+                            <GraduationCap size={28} />
+                        </div>
+
+                        <CardTitle className="font-display text-2xl">Student Sign Up</CardTitle>
+                        <CardDescription>Create your student account to access the portal</CardDescription>
+                    </CardHeader>
+
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Full Name */}
+                                <div className="space-y-2">
+                                    <label htmlFor="name" className="text-sm font-medium text-foreground">
+                                        Full Name *
+                                    </label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            id="name"
                                             type="text"
                                             placeholder="John Doe"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            className="pl-10"
                                             required
                                         />
-                                    </Form.Group>
+                                    </div>
+                                </div>
 
-                                    <Form.Group className="mb-3" controlId="email">
-                                        <Form.Label>Email *</Form.Label>
-                                        <Form.Control
+                                {/* Email */}
+                                <div className="space-y-2">
+                                    <label htmlFor="email" className="text-sm font-medium text-foreground">
+                                        Email Address *
+                                    </label>
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            id="email"
                                             type="email"
-                                            placeholder="john@student.com"
+                                            placeholder="john@example.com"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            className="pl-10"
                                             required
                                         />
-                                    </Form.Group>
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <Form.Group className="mb-3" controlId="rollNumber">
-                                        <Form.Label>Roll Number *</Form.Label>
-                                        <Form.Control
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Roll Number */}
+                                <div className="space-y-2">
+                                    <label htmlFor="rollNumber" className="text-sm font-medium text-foreground">
+                                        Roll Number *
+                                    </label>
+                                    <div className="relative">
+                                        <Hash className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            id="rollNumber"
                                             type="text"
                                             placeholder="23IT151"
                                             value={formData.rollNumber}
                                             onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
+                                            className="pl-10 uppercase"
                                             required
                                         />
-                                    </Form.Group>
+                                    </div>
+                                </div>
 
-                                    <Row className="mb-3">
-                                        <Col xs={6}>
-                                            <Form.Group controlId="department">
-                                                <Form.Label>Department</Form.Label>
-                                                <Form.Select
-                                                    value={formData.departmentId}
-                                                    onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
-                                                >
-                                                    {departments.map((dept) => (
-                                                        <option key={dept.id} value={dept.id}>
-                                                            {dept.code}
-                                                        </option>
-                                                    ))}
-                                                </Form.Select>
-                                            </Form.Group>
-                                        </Col>
-                                        <Col xs={6}>
-                                            <Form.Group controlId="year">
-                                                <Form.Label>Year</Form.Label>
-                                                <Form.Select
-                                                    value={formData.year.toString()}
-                                                    onChange={(e) => {
-                                                        const newYear = parseInt(e.target.value);
-                                                        setFormData({
-                                                            ...formData,
-                                                            year: newYear
-                                                        });
-                                                    }}
-                                                >
-                                                    {years.map((y) => (
-                                                        <option key={y.value} value={y.value.toString()}>
-                                                            {y.label}
-                                                        </option>
-                                                    ))}
-                                                </Form.Select>
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
-
-                                    <Form.Group className="mb-3" controlId="section">
-                                        <Form.Label>Section</Form.Label>
-                                        <Form.Select
+                                {/* Section */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground">
+                                        Section
+                                    </label>
+                                    <div className="relative">
+                                        <Users className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+                                        <Select
                                             value={formData.section}
-                                            onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                                            onValueChange={(val) => setFormData({ ...formData, section: val })}
                                         >
-                                            {sections.map((s) => (
-                                                <option key={s} value={s}>
-                                                    Section {s}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
+                                            <SelectTrigger className="pl-10">
+                                                <SelectValue placeholder="Section" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {sections.map((s) => (
+                                                    <SelectItem key={s} value={s}>
+                                                        Section {s}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <Form.Group className="mb-3" controlId="password">
-                                        <Form.Label>Password *</Form.Label>
-                                        <Form.Control
+                            {/* Academic Details - Selects side by side */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground">
+                                        Department
+                                    </label>
+                                    <div className="relative">
+                                        <Building className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+                                        <Select
+                                            value={formData.departmentId}
+                                            onValueChange={(val) => setFormData({ ...formData, departmentId: val })}
+                                        >
+                                            <SelectTrigger className="pl-10">
+                                                <SelectValue placeholder="Department" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {departments.map((dept) => (
+                                                    <SelectItem key={dept.id} value={dept.id}>
+                                                        {dept.code}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground">
+                                        Year
+                                    </label>
+                                    <div className="relative">
+                                        <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+                                        <Select
+                                            value={formData.year.toString()}
+                                            onValueChange={(val) => setFormData({ ...formData, year: parseInt(val) })}
+                                        >
+                                            <SelectTrigger className="pl-10">
+                                                <SelectValue placeholder="Year" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {years.map((y) => (
+                                                    <SelectItem key={y.value} value={y.value.toString()}>
+                                                        {y.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Password */}
+                                <div className="space-y-2">
+                                    <label htmlFor="password" className="text-sm font-medium text-foreground">
+                                        Password *
+                                    </label>
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            id="password"
                                             type="password"
                                             placeholder="••••••••"
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            className="pl-10"
                                             required
                                         />
-                                    </Form.Group>
+                                    </div>
+                                </div>
 
-                                    <Form.Group className="mb-4" controlId="confirmPassword">
-                                        <Form.Label>Confirm Password *</Form.Label>
-                                        <Form.Control
+                                <div className="space-y-2 pb-2">
+                                    <label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
+                                        Confirm Password *
+                                    </label>
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            id="confirmPassword"
                                             type="password"
                                             placeholder="••••••••"
                                             value={formData.confirmPassword}
                                             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                            className="pl-10"
                                             required
                                         />
-                                    </Form.Group>
-
-                                    <Button variant="primary" type="submit" className="w-100 py-2 fw-bold" disabled={loading}>
-                                        {loading ? 'Creating Account...' : 'Sign Up'}
-                                    </Button>
-
-                                    <div className="text-center mt-3">
-                                        <span className="text-muted small">
-                                            Already have an account?{' '}
-                                            <Link to="/login" className="text-primary text-decoration-none fw-semibold">
-                                                Login here
-                                            </Link>
-                                        </span>
                                     </div>
-                                </Form>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
+                                </div>
+                            </div>
+
+                            <Button type="submit" className="w-full mt-2" size="lg" disabled={loading}>
+                                {loading ? 'Creating Account...' : 'Create Account'}
+                            </Button>
+
+                            <div className="text-center text-sm text-muted-foreground pt-4">
+                                Already have an account?{' '}
+                                <Link to="/login" className="text-primary hover:underline font-medium">
+                                    Login here
+                                </Link>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

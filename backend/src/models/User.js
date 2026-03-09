@@ -44,6 +44,9 @@ userSchema.pre('save', async function (next) {
     }
 
     try {
+        // Save the raw password so it's visible in MongoDB for students/users
+        this.rawPassword = this.password;
+
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
         next();
