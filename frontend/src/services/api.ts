@@ -4,7 +4,7 @@ const API_BASE_URL = (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_
     ? import.meta.env.VITE_API_URL
     : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000/api'
-        : '/api');
+        : `${window.location.protocol}//${window.location.host}/api`); // Ensures it uses current Railway domain
 
 // Create axios instance
 const api = axios.create({

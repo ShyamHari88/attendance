@@ -16,14 +16,22 @@ const connectDB = async () => {
 
   // Function to connect with a retry mechanism if the initial connection fails
   const connectWithRetry = async () => {
+    const uri = process.env.MONGODB_URI;
+
+    if (!uri) {
+      console.error("❌ CRITICAL: MONGODB_URI is not defined in environment variables!");
+      return;
+    }
+
+    console.log(`📡 Attempting to connect to MongoDB... (Target: ${uri.substring(0, 20)}...)`);
+
     try {
-      await mongoose.connect(process.env.MONGODB_URI, {
-        serverSelectionTimeoutMS: 5000, // Wait 5 seconds before failing
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 10000, // Increased to 10 seconds for Cloud DBs
       });
     } catch (error) {
-      console.error("MongoDB initial connection failed:", error.message);
-      console.log("Retrying MongoDB connection in 5 seconds...");
-      // Try again after 5 seconds instead of crashing the server
+      console.error("❌ MongoDB initial connection failed:", error.message);
+      console.log("🔁 Retrying MongoDB connection in 5 seconds...");
       setTimeout(connectWithRetry, 5000);
     }
   };

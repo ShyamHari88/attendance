@@ -182,8 +182,12 @@ export const studentLogin = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
     } catch (error) {
-        console.error('[AUTH] Student login error:', error);
-        res.status(500).json({ message: 'Error logging in', error: error.message });
+        console.error('[AUTH ERROR] Student login exception:', error);
+        res.status(500).json({
+            message: 'Internal server error during login',
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 };
 
@@ -293,8 +297,11 @@ export const teacherLogin = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
     } catch (error) {
-        console.error('Teacher login error:', error);
-        res.status(500).json({ message: 'Error logging in', error: error.message });
+        console.error('[AUTH ERROR] Teacher login exception:', error);
+        res.status(500).json({
+            message: 'Internal server error during teacher login',
+            error: error.message
+        });
     }
 };
 
@@ -343,8 +350,8 @@ export const adminLogin = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
     } catch (error) {
-        console.error('Admin login error:', error);
-        res.status(500).json({ message: 'Error logging in', error: error.message });
+        console.error('[AUTH ERROR] Admin login exception:', error);
+        res.status(500).json({ message: 'Internal server error during admin login', error: error.message });
     }
 };
 
@@ -532,7 +539,7 @@ export const advisorLogin = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
     } catch (error) {
-        console.error('Advisor login error:', error);
-        res.status(500).json({ message: 'Error logging in', error: error.message });
+        console.error('[AUTH ERROR] Advisor login exception:', error);
+        res.status(500).json({ message: 'Internal server error during advisor login', error: error.message });
     }
 };
