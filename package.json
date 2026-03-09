@@ -6,6 +6,7 @@
         "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
         "build": "npm install --prefix backend && npm install --prefix frontend && cd frontend && CI=false npm run build",
         "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\" --kill-others-on-fail --prefix-colors \"magenta,blue\"",
+        "start": "node backend/src/server.js",
         "seed": "cd backend && npm run seed"
     },
     "devDependencies": {

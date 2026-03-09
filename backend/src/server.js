@@ -62,7 +62,6 @@ app.use('/api/assignments', assignmentRoutes);
 
 
 
-
 // Serve uploads
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -75,7 +74,7 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'OK',
         message: 'Class Connect Backend Server is running',
-        version: '1.0.3', // Increment version
+        version: '1.0.3',
         timestamp: new Date().toISOString()
     });
 });
@@ -85,10 +84,8 @@ app.get('/debug-db', async (req, res) => {
     try {
         const state = mongoose.connection.readyState;
         const states = ['disconnected', 'connected', 'connecting', 'disconnecting'];
-
         let collections = [];
         let error = null;
-
         if (state === 1) {
             try {
                 collections = await mongoose.connection.db.listCollections().toArray();
@@ -97,34 +94,37 @@ app.get('/debug-db', async (req, res) => {
                 error = err.message;
             }
         }
-
         res.json({
             status: state === 1 ? 'OK' : 'ERROR',
             connectionState: states[state] || 'unknown',
-            readyState: state,
             collections,
             dbError: error,
-            env: {
-                hasMongoURI: !!process.env.MONGODB_URI,
-                uriStart: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 15) + '...' : 'undefined'
-            }
+            env: { hasMongoURI: !!process.env.MONGODB_URI }
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// API Routes
+// API Base Route
 app.get('/api', (req, res) => {
-    res.json({
-        message: 'Class Connect API',
-        version: '1.0.0',
-        endpoints: {
-            health: '/health',
-            api: '/api'
-        }
-    });
+    res.json({ message: 'Class Connect API', version: '1.0.0' });
 });
+
+// ---------------------- SERVE FRONTEND IN PRODUCTION ----------------------
+if (process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT) {
+    const frontendDistPath = path.join(__dirname, '../../frontend/dist');
+    app.use(express.static(frontendDistPath));
+
+    app.get('*', (req, res) => {
+        if (req.path.startsWith('/api/')) {
+            return res.status(404).json({ message: 'API Route Not Found' });
+        }
+        res.sendFile(path.join(frontendDistPath, 'index.html'));
+    });
+    console.log('Serving frontend from:', frontendDistPath);
+}
+// --------------------------------------------------------------------------
 
 // JSON Error Handler middleware
 app.use((err, req, res, next) => {
