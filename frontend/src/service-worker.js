@@ -63,15 +63,11 @@ self.addEventListener('push', (event) => {
         ],
         tag: data.tag || 'class-connect-notification',
         renotify: true,
-        requireInteraction: true
+        requireInteraction: true // Keeps notification visible until user interacts
     };
 
     event.waitUntil(
-        Promise.all([
-            self.registration.showNotification(title, options),
-            // Update the App Icon Badge (WhatsApp style)
-            'setAppBadge' in navigator ? navigator.setAppBadge(data.badgeCount || 1).catch(err => console.error('Badge error:', err)) : Promise.resolve()
-        ])
+        self.registration.showNotification(title, options)
     );
 });
 

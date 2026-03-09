@@ -1,6 +1,5 @@
 import webpush from 'web-push';
 import PushSubscription from '../models/PushSubscription.js';
-import Notification from '../models/Notification.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,10 +29,7 @@ export const sendPushNotification = async (userId, title, body, data = {}) => {
             return;
         }
 
-        // Calculate unread count (WhatsApp style)
-        const unreadCount = await Notification.countDocuments({ userId, isRead: false });
-
-        console.log(`[PUSH] ✅ Found ${subscriptions.length} subscription(s) for user ${userId}. Unread count: ${unreadCount}. Sending now...`);
+        console.log(`[PUSH] ✅ Found ${subscriptions.length} subscription(s) for user ${userId}. Sending now...`);
 
 
         const payload = JSON.stringify({
@@ -41,7 +37,6 @@ export const sendPushNotification = async (userId, title, body, data = {}) => {
             body,
             icon: '/easy-attendance-logo.png',
             badge: '/easy-attendance-logo.png',
-            badgeCount: unreadCount,
             data: {
                 url: data.url || '/',
                 ...data
