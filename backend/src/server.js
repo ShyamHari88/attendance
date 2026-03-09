@@ -9,6 +9,15 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose'; // Add this import
 import connectDB from './config/database.js';
+
+// Validate critical environment variables
+if (!process.env.JWT_SECRET) {
+    console.error("❌ CRITICAL: JWT_SECRET is not defined! Login will fail.");
+}
+if (!process.env.MONGODB_URI) {
+    console.error("❌ CRITICAL: MONGODB_URI is not defined! Database connection will fail.");
+}
+
 import authRoutes from './routes/auth.js';
 import studentRoutes from './routes/students.js';
 import attendanceRoutes from './routes/attendance.js';
