@@ -38,6 +38,22 @@ export function NotificationBell() {
         return () => clearInterval(interval);
     }, [isAdvisor, isStudent]);
 
+    const unreadNotifications = Array.isArray(notifications) ? notifications.filter(n => n && !n.isRead) : [];
+    const totalCount = (isAdvisor ? (Array.isArray(pendingRequests) ? pendingRequests.length : 0) : 0) + unreadNotifications.length;
+
+    // Sync WhatsApp-style icon badge with current unread count
+    useEffect(() => {
+        if ('setAppBadge' in navigator) {
+            if (totalCount > 0) {
+                // @ts-ignore - setAppBadge is a newer API
+                navigator.setAppBadge(totalCount).catch(console.error);
+            } else {
+                // @ts-ignore
+                navigator.clearAppBadge().catch(console.error);
+            }
+        }
+    }, [totalCount]);
+
     const handleUpdateLeaveStatus = async (requestId: string, status: string) => {
         try {
             await dataService.updateLeaveStatus(requestId, status);
@@ -66,9 +82,6 @@ export function NotificationBell() {
             toast.error('Failed to mark all as read');
         }
     };
-
-    const unreadNotifications = Array.isArray(notifications) ? notifications.filter(n => n && !n.isRead) : [];
-    const totalCount = (isAdvisor ? (Array.isArray(pendingRequests) ? pendingRequests.length : 0) : 0) + unreadNotifications.length;
 
     return (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -197,6 +210,6 @@ export function NotificationBell() {
                     )}
                 </div>
             </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu >
     );
 }
