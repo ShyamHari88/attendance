@@ -1,10 +1,22 @@
 import axios from 'axios';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.includes('localhost'))
+// In production, VITE_API_URL must be set in Vercel environment variables
+// pointing to your backend (Railway / Render / etc.)
+// e.g. VITE_API_URL=https://your-backend.railway.app/api
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL
     ? import.meta.env.VITE_API_URL
-    : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    : isLocalhost
         ? 'http://localhost:5000/api'
-        : `${window.location.protocol}//${window.location.host}/api`); // Ensures it uses current Railway domain
+        : (() => {
+            console.error(
+                '[API] VITE_API_URL is not set! ' +
+                'Add it to Vercel → Project → Settings → Environment Variables. ' +
+                'Falling back to localhost (will fail in production).'
+            );
+            return 'http://localhost:5000/api';
+        })();
 
 // Create axios instance
 const api = axios.create({
